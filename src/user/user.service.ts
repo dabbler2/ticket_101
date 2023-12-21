@@ -1,9 +1,9 @@
-import {Injectable, BadRequestException} from '@nestjs/common'
+import {Injectable, ConflictException} from '@nestjs/common'
 import {JwtService} from '@nestjs/jwt'
 import {compare, hash} from 'bcrypt'
 import {Repository, QueryFailedError} from 'typeorm'
 import {InjectRepository} from '@nestjs/typeorm'
-
+import {Role} from './types/userRole.type'
 import {User} from './entities/user.entity'
 
 @Injectable()
@@ -14,14 +14,16 @@ export class UserService {
         private readonly jwtService: JwtService
     ) {}
 
-    async signup(email: string, nickname: string, password: string) {
+    async signup(email: string, nickname: string, password: string, role: Role) {
         const hashPW = await hash(password, 10)
         try {
-            await this.userRepository.save({email, nickname, hashPW})
-            return {message: '회원가입이 완료되었습니다.'}
+            await this.userRepository.save({email, nickname, hashPW, role})
+            return {
+                message: (role === Role.User ? '회원가입이' : '관리자 등록이') + ' 완료되었습니다.'
+            }
         } catch (e) {
             if (e instanceof QueryFailedError)
-                throw new BadRequestException('이메일이 이미 사용중입니다.')
+                throw new ConflictException('이메일이 이미 사용중입니다.')
             throw e
         }
     }
