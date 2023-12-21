@@ -17,7 +17,13 @@ export class UserService {
     async signup(email: string, nickname: string, password: string, role: Role) {
         const hashPW = await hash(password, 10)
         try {
-            await this.userRepository.save({email, nickname, hashPW, role})
+            await this.userRepository.save({
+                email,
+                nickname,
+                hashPW,
+                role,
+                point: role === Role.User? 1000000:0
+            })
             return {
                 message: (role === Role.User ? '회원가입이' : '관리자 등록이') + ' 완료되었습니다.'
             }

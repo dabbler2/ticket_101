@@ -18,6 +18,9 @@ export class User {
     @Column({type: 'varchar', select: false, nullable: false})
     hashPW: string
 
-    @Column({type: 'enum', enum: Role, default: Role.User})
+    @Column({type: 'enum', enum: Role, nullable: false, default: Role.User})
     role: Role
+
+    @Column({type: 'int', nullable: false, default: 0})
+    point: number
 }
