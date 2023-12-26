@@ -8,10 +8,11 @@ import {TypeOrmModule, TypeOrmModuleOptions} from '@nestjs/typeorm'
 import {AppController} from './app.controller'
 import {AppService} from './app.service'
 
-import {User} from './user/entities/user.entity'
 import {UserModule} from './user/user.module'
-import { AuthModule } from './auth/auth.module';
+import {AuthModule} from './auth/auth.module'
+import {ConcertModule} from './concert/concert.module'
 
+console.log(__dirname)
 const typeOrmModuleOptions = {
     useFactory: async (configService: ConfigService): Promise<TypeOrmModuleOptions> => ({
         namingStrategy: new SnakeNamingStrategy(),
@@ -21,7 +22,7 @@ const typeOrmModuleOptions = {
         host: configService.get('DB_HOST'),
         port: configService.get('DB_PORT'),
         database: configService.get('DB_NAME'),
-        entities: [User],
+        entities: [__dirname + "/*/entities/*{.js,.ts}"],
         synchronize: configService.get('DB_SYNC'),
         logging: true
     }),
@@ -43,7 +44,8 @@ const typeOrmModuleOptions = {
         }),
         TypeOrmModule.forRootAsync(typeOrmModuleOptions),
         UserModule,
-        AuthModule
+        AuthModule,
+        ConcertModule
     ],
     controllers: [AppController],
     providers: [AppService]

@@ -10,9 +10,9 @@ import {User} from './entities/user.entity'
     imports: [
         JwtModule.registerAsync({
             useFactory: (config: ConfigService) => ({
-				global: true,
+                global: true,
                 secret: config.get<string>('ACCESS_SECRET_KEY'),
-				signOptions: { expiresIn: '5s' }
+                signOptions: {expiresIn: '5s'}
             }),
             inject: [ConfigService]
         }),
@@ -20,6 +20,6 @@ import {User} from './entities/user.entity'
     ],
     providers: [UserService],
     controllers: [UserController],
-	exports: [UserService]
+    exports: [UserService]
 })
 export class UserModule {}

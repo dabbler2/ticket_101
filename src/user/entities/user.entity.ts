@@ -1,15 +1,13 @@
 import {Column, Entity, Index, OneToMany, PrimaryGeneratedColumn} from 'typeorm'
 import {Role} from '../types/userRole.type'
 
-@Index('email', ['email'], {unique: true})
-@Entity({
-    name: 'users'
-})
+@Entity({name: 'users'})
 export class User {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({type: 'varchar', length: 70, unique: true, nullable: false})
+    @Index({unique: true})
+    @Column({type: 'varchar', length: 70, nullable: false})
     email: string
 
     @Column({type: 'varchar', length: 20, nullable: false})

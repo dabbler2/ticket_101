@@ -25,10 +25,9 @@ export class UserService {
                 role,
                 point: role === Role.User ? 1000000 : 0
             })
-            return {isUser: role===Role.User}
+            return {isUser: role === Role.User}
         } catch (e) {
-            if (e instanceof QueryFailedError)
-                throw new ConflictException('이메일이 이미 사용중입니다.')
+            if (e instanceof QueryFailedError) throw new ConflictException('이메일이 이미 사용중입니다.')
             throw e
         }
     }
@@ -44,9 +43,9 @@ export class UserService {
         const payload = {email, id: user.id}
         return {accessToken: this.jwtService.sign(payload)}
     }
-	
-	// id로 검색
-	async findById(id: number){
-		return await this.userRepository.findOne({where:{id}})
-	}
+
+    // id로 검색
+    async findByEmail(email: string) {
+        return await this.userRepository.findOne({where: {email}})
+    }
 }
