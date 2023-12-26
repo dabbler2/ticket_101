@@ -1,5 +1,6 @@
 import {IsEmail, IsNotEmpty, IsString, MinLength, MaxLength, IsEnum} from 'class-validator'
 import {Role} from '../types/userRole.type'
+import {Match} from '../../utils/match.decorator'
 
 export class SignupDto {
     @IsEmail()
@@ -19,7 +20,7 @@ export class SignupDto {
     password: string
 
     @IsString()
-    @IsNotEmpty({message: '확인용 비밀번호를 입력해주세요.'})
+    @Match('password',{message: '확인용 비밀번호가 일치하지 않습니다.'}) // password와 같아야 함
     confirmPW: string
 
     @IsEnum(Role)

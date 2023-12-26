@@ -8,7 +8,7 @@ export class Schedule{
     id: number
 	
 	@ManyToOne(() => Concert, concert => concert.schedules, {onDelete:'CASCADE'})
-	@JoinColumn({name:'concertId'})
+	@JoinColumn({name:'concert_id'})
 	concert: Concert
 	
 	@Column('int')

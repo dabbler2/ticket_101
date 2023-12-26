@@ -9,8 +9,8 @@ export class Concert {
 	@Column({type: 'varchar', length: 100,  nullable: false})
     name: string
 	
-	@Column('text')
-	description: string
+	@Column('text',{nullable: true})
+	description!: string
 	
 	@Column({type: 'varchar', length: 100,  nullable: false})
 	venue: string
@@ -18,11 +18,11 @@ export class Concert {
 	@Column({type: 'int', nullable: false, default: 0})
 	capacity: number
 	
-	@Column('varchar')
-	thumbnail: string
+	@Column('varchar',{nullable: true})
+	thumbnail!: string
 	
-	@Column('varchar')
-	category: string
+	@Column('varchar',{nullable: true})
+	category!: string
 	
 	@OneToMany(() => Schedule, schedule => schedule.concert)
 	schedules: Schedule[]

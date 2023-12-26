@@ -12,7 +12,7 @@ import {User} from './entities/user.entity'
             useFactory: (config: ConfigService) => ({
                 global: true,
                 secret: config.get<string>('ACCESS_SECRET_KEY'),
-                signOptions: {expiresIn: '5s'}
+                signOptions: {expiresIn: '30m'}
             }),
             inject: [ConfigService]
         }),
