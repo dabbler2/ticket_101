@@ -1,5 +1,5 @@
 import {IsEmail, IsNotEmpty, IsString, MinLength, MaxLength, IsEnum} from 'class-validator'
-import {Role} from './types/userRole.type'
+import {Role} from '../types/userRole.type'
 
 export class SignupDto {
     @IsEmail()
@@ -24,14 +24,4 @@ export class SignupDto {
 
     @IsEnum(Role)
     role: Role
-}
-
-export class SigninDto {
-    @IsEmail()
-    @IsNotEmpty({message: '이메일을 입력해주세요.'})
-    email: string
-
-    @IsString()
-    @IsNotEmpty({message: '비밀번호를 입력해주세요.'})
-    password: string
 }

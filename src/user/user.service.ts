@@ -25,9 +25,7 @@ export class UserService {
                 role,
                 point: role === Role.User ? 1000000 : 0
             })
-            return {
-                message: (role === Role.User ? '회원가입이' : '관리자 등록이') + ' 완료되었습니다.'
-            }
+            return {isUser: role===Role.User}
         } catch (e) {
             if (e instanceof QueryFailedError)
                 throw new ConflictException('이메일이 이미 사용중입니다.')
@@ -44,7 +42,11 @@ export class UserService {
         if (!user || !(await compare(password, user.hashPW)))
             throw new UnauthorizedException('이메일이나 비밀번호를 확인해주세요.')
         const payload = {email, id: user.id}
-        console.log(user.id)
         return {accessToken: this.jwtService.sign(payload)}
     }
+	
+	// id로 검색
+	async findById(id: number){
+		return await this.userRepository.findOne({where:{id}})
+	}
 }
