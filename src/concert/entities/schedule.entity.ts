@@ -14,9 +14,12 @@ export class Schedule{
 	@Column('int')
 	concertId: number
 	
-	@Column({type: 'datetime', nullable: false})
+	@Column('datetime')
 	startAt: Date
 	
-	@Column({type: 'datetime', nullable: false})
+	@Column('datetime')
 	endAt: Date
+	
+	@Column('int')
+	vacancy: number
 }

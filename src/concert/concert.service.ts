@@ -14,10 +14,15 @@ export class ConcertService {
         private scheduleRepository: Repository<Schedule>
     ) {}
 	
+	// 전체 공연 목록 보기
+	async findAll(){
+		return await this.concertRepository.find()
+	}
+	
 	// 공연 등록
 	async createConcert(concertDto: ConcertDto){
 		const {schedules,...concert} = concertDto
-		const {id} = await this.concertRepository.save(concert)
-		await this.scheduleRepository.insert(schedules.map(schedule => {return {concertId:id,...schedule}}))
+		const {id,capacity:vacancy} = await this.concertRepository.save(concert)
+		await this.scheduleRepository.insert(schedules.map(schedule => {return {concertId:id,vacancy,...schedule}}))
 	}
 }

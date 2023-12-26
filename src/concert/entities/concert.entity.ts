@@ -6,17 +6,20 @@ export class Concert {
 	@PrimaryGeneratedColumn()
     id: number
 	
-	@Column({type: 'varchar', length: 100,  nullable: false})
+	@Column({type: 'varchar', length: 100})
     name: string
 	
 	@Column('text',{nullable: true})
 	description!: string
 	
-	@Column({type: 'varchar', length: 100,  nullable: false})
+	@Column({type: 'varchar', length: 100})
 	venue: string
 	
-	@Column({type: 'int', nullable: false, default: 0})
+	@Column({type: 'int', default: 0})
 	capacity: number
+	
+	@Column({type: 'int', default: 0})
+	price: number
 	
 	@Column('varchar',{nullable: true})
 	thumbnail!: string

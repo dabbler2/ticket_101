@@ -19,6 +19,10 @@ export class ConcertDto {
 	@Min(0)
 	capacity: number
 	
+	@IsInt()
+	@Min(0)
+	price: number
+	
 	@IsString()
 	@ValidateIf((o,v) => v!==undefined)
 	thumbnail: string | undefined

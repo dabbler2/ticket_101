@@ -1,4 +1,4 @@
-import {IsDateString,IsNotEmpty} from 'class-validator'
+import {IsInt,Min,IsDateString,IsNotEmpty} from 'class-validator'
 import {IsGreaterThan} from '../../utils/is-greater-than.decorator'
 
 export class Schedule {

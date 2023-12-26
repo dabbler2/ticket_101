@@ -10,10 +10,10 @@ import { ConcertDto } from './dtos/concert.dto'
 @Controller('concert')
 export class ConcertController {
 	constructor(private readonly concertService: ConcertService) {}
-	// 공연 목록 보기
+	// 전체 공연 목록 보기
 	@Get()
 	async findAll(){
-		console.log(23)
+		return await this.concertService.findAll()
 	}
 	
 	// 공연 등록
