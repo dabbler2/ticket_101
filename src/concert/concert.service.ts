@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common'
+import {Injectable,NotFoundException} from '@nestjs/common'
 import {Repository} from 'typeorm'
 import {InjectRepository} from '@nestjs/typeorm'
 import {Concert} from './entities/concert.entity'
@@ -17,6 +17,15 @@ export class ConcertService {
 	// 전체 공연 목록 보기
 	async findAll(){
 		return await this.concertRepository.find()
+	}
+	
+	// 공연 상세 정보 보기
+	async findOne(id: number){
+		const concert = await this.concertRepository.findOne({where:{id},relations: {
+        schedules: true,
+    }})
+		if(!concert) throw new NotFoundException('해당 공연을 찾을 수 없습니다.')
+		return concert
 	}
 	
 	// 공연 등록
