@@ -44,4 +44,9 @@ export class BookingService {
             await queryRunner.release()
         }
     }
+	
+	// 내 예매 목록 확인
+	async findByUser(userId){
+		return await this.bookingRepository.find({where:{userId}})
+	}
 }
