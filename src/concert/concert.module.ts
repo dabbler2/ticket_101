@@ -8,6 +8,7 @@ import {Schedule} from './entities/schedule.entity'
 @Module({
 	imports: [TypeOrmModule.forFeature([Concert,Schedule])],
     providers: [ConcertService],
-    controllers: [ConcertController]
+    controllers: [ConcertController],
+	exports: [ConcertService]
 })
 export class ConcertModule {}

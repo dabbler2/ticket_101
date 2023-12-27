@@ -11,6 +11,7 @@ import {AppService} from './app.service'
 import {UserModule} from './user/user.module'
 import {AuthModule} from './auth/auth.module'
 import {ConcertModule} from './concert/concert.module'
+import { TicketModule } from './ticket/ticket.module';
 
 console.log(__dirname)
 const typeOrmModuleOptions = {
@@ -45,7 +46,8 @@ const typeOrmModuleOptions = {
         TypeOrmModule.forRootAsync(typeOrmModuleOptions),
         UserModule,
         AuthModule,
-        ConcertModule
+        ConcertModule,
+        TicketModule
     ],
     controllers: [AppController],
     providers: [AppService]

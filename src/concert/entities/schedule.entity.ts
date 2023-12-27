@@ -1,6 +1,6 @@
-import {Column, Entity, Index, ManyToOne, JoinColumn,  PrimaryGeneratedColumn} from 'typeorm'
-
+import {Column, Entity, ManyToOne, JoinColumn, OneToMany, PrimaryGeneratedColumn} from 'typeorm'
 import {Concert} from './concert.entity'
+import {Ticket} from '../../ticket/entities/ticket.entity'
 
 @Entity({name: 'schedules'})
 export class Schedule{
@@ -22,4 +22,7 @@ export class Schedule{
 	
 	@Column('int')
 	vacancy: number
+	
+	@OneToMany(() => Ticket, ticket => ticket.schedule)
+	tickets: Ticket[]
 }
