@@ -20,7 +20,7 @@ export class BookingService {
         private readonly userRepository: Repository<User>,
         private readonly dataSource: DataSource,
         @Inject(REQUEST) private req: RequestWithInfo,
-		@Inject(ConcertService) private concertService: ConcertService
+        @Inject(ConcertService) private concertService: ConcertService
     ) {}
 
     // 공연 예매, 일단 1장씩만 가능
@@ -51,21 +51,21 @@ export class BookingService {
     async findByUser(userId: number) {
         return await this.bookingRepository.find({where: {userId}})
     }
-	
-	// 예매 취소
-	async cancel(id: number){
-		const booking = await this.bookingRepository.findOne({where:{id}})
-		const {user} = this.req
-		if(!booking || booking.userId!==user.id) throw new ForbiddenException('권한이 없습니다.')
-		const queryRunner = this.dataSource.createQueryRunner()
+
+    // 예매 취소
+    async cancel(id: number) {
+        const booking = await this.bookingRepository.findOne({where: {id}})
+        const {user} = this.req
+        if (!booking || booking.userId !== user.id) throw new ForbiddenException('권한이 없습니다.')
+        const queryRunner = this.dataSource.createQueryRunner()
         await queryRunner.connect()
         await queryRunner.startTransaction()
-		try {
-			const {scheduleId,spending} = booking
-			const schedule = await this.concertService.findSchedule(scheduleId)
+        try {
+            const {scheduleId, spending} = booking
+            const schedule = await this.concertService.findSchedule(scheduleId)
             user.point += spending
-			await queryRunner.manager.save(user)
-            await queryRunner.manager.delete(Booking,booking)
+            await queryRunner.manager.save(user)
+            await queryRunner.manager.delete(Booking, booking)
             ++schedule.vacancy
             await queryRunner.manager.save(schedule)
             await queryRunner.commitTransaction()
@@ -76,5 +76,5 @@ export class BookingService {
         } finally {
             await queryRunner.release()
         }
-	}
+    }
 }

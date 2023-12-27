@@ -27,12 +27,12 @@ export class BookingController {
     async getMyBooking(@Req() req) {
         return await this.bookingService.findByUser(req.user.id)
     }
-	
-	// 예매 취소
-	@Roles(Role.User)
-	@Delete(':id')
-	async cancel(@Param() param: Id){
-		const {id} = param
-		return await this.bookingService.cancel(id)
-	}
+
+    // 예매 취소
+    @Roles(Role.User)
+    @Delete(':id')
+    async cancel(@Param() param: Id) {
+        const {id} = param
+        return await this.bookingService.cancel(id)
+    }
 }
