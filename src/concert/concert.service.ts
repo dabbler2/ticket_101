@@ -9,9 +9,9 @@ import {ConcertDto} from './dtos/concert.dto'
 export class ConcertService {
     constructor(
         @InjectRepository(Concert)
-        private concertRepository: Repository<Concert>,
+        private readonly concertRepository: Repository<Concert>,
         @InjectRepository(Schedule)
-        private scheduleRepository: Repository<Schedule>
+        private readonly scheduleRepository: Repository<Schedule>
     ) {}
 
     // 전체 공연 목록 보기
@@ -20,12 +20,14 @@ export class ConcertService {
     }
 
     // 공연 상세 정보 보기
-    async findOne(id: number) {
+    async findConcert(id: number, detail: boolean = true) {
         const concert = await this.concertRepository.findOne({
             where: {id},
-            relations: {
-                schedules: true
-            }
+            relations: detail
+                ? {
+                      schedules: true
+                  }
+                : {}
         })
         if (!concert) throw new NotFoundException('해당 공연을 찾을 수 없습니다.')
         return concert
@@ -34,6 +36,11 @@ export class ConcertService {
     // 공연 검색
     async search(keyword: string) {
         return await this.concertRepository.find({where: {name: Like(`%${keyword}%`)}})
+    }
+
+    // 스케줄 찾기
+    async findSchedule(id: number) {
+        return await this.scheduleRepository.findOne({where: {id}})
     }
 
     // 공연 등록

@@ -4,6 +4,6 @@ import {Type} from 'class-transformer'
 export class Id {
     @IsInt()
     @Type(() => Number)
-    @Min(0)
+    @Min(1)
     id: number
 }

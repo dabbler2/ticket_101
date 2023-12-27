@@ -1,6 +1,6 @@
 import {Column, Entity, Index, OneToMany, PrimaryGeneratedColumn} from 'typeorm'
 import {Role} from '../types/userRole.type'
-import {Ticket} from '../../ticket/entities/ticket.entity'
+import {Booking} from '../../booking/entities/booking.entity'
 
 @Entity({name: 'users'})
 export class User {
@@ -23,6 +23,6 @@ export class User {
     @Column({type: 'int', nullable: false, default: 0})
     point: number
 	
-	@OneToMany(() => Ticket, ticket => ticket.user)
-	tickets: Ticket[]
+	@OneToMany(() => Booking, Booking => Booking.user)
+	Bookings: Booking[]
 }

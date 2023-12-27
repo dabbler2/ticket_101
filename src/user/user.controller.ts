@@ -26,7 +26,6 @@ export class UserController {
     }
 
     // 내 정보 보기
-    // 데코레이터 써야되려나?
     @UseGuards(AuthGuard('jwt'))
     @Get('myInfo')
     getMyInfo(@Req() req) {

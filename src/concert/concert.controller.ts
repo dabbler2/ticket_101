@@ -18,9 +18,9 @@ export class ConcertController {
 
     // 공연 상세 정보 보기
     @Get('/detail/:id')
-    async findOne(@Param() params: Id) {
+    async findConcert(@Param() params: Id) {
         const {id} = params
-        return await this.concertService.findOne(id)
+        return await this.concertService.findConcert(id)
     }
 
     // 공연 검색
