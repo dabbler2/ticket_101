@@ -1,4 +1,10 @@
-import {registerDecorator, ValidationArguments, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface} from 'class-validator';
+import {
+    registerDecorator,
+    ValidationArguments,
+    ValidationOptions,
+    ValidatorConstraint,
+    ValidatorConstraintInterface
+} from 'class-validator'
 
 export function IsGreaterThan(property: string, validationOptions?: ValidationOptions) {
     return (object: any, propertyName: string) => {
@@ -7,16 +13,16 @@ export function IsGreaterThan(property: string, validationOptions?: ValidationOp
             propertyName,
             options: validationOptions,
             constraints: [property],
-            validator: IsGreaterThanConstraint,
-        });
-    };
+            validator: IsGreaterThanConstraint
+        })
+    }
 }
 
 @ValidatorConstraint({name: 'IsGreaterThan'})
 export class IsGreaterThanConstraint implements ValidatorConstraintInterface {
     validate(value: any, args: ValidationArguments) {
-        const [relatedPropertyName] = args.constraints;
-        const relatedValue = (args.object as any)[relatedPropertyName];
-        return value > relatedValue;
+        const [relatedPropertyName] = args.constraints
+        const relatedValue = (args.object as any)[relatedPropertyName]
+        return value > relatedValue
     }
 }
