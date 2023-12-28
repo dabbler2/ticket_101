@@ -1,4 +1,4 @@
-import {Scope, Inject, Injectable, BadRequestException, ConflictException, ForbiddenException} from '@nestjs/common'
+import {Scope, Inject, Injectable, BadRequestException, NotFoundException, ConflictException, ForbiddenException} from '@nestjs/common'
 import {Repository, QueryFailedError} from 'typeorm'
 import {InjectRepository} from '@nestjs/typeorm'
 import {Booking} from './entities/booking.entity'
@@ -24,23 +24,34 @@ export class BookingService {
     ) {}
 
     // 공연 예매, 일단 1장씩만 가능
-    async book() {
+    async book(id, seatNum) {
+        const schedule = await this.concertService.findSchedule(id)
+        if (!schedule) throw new NotFoundException('해당 일정을 찾을 수 없습니다.')
+        const {concertId, vacancy} = schedule
+        if (!vacancy) throw new BadRequestException('죄송합니다. 해당 일정은 매진입니다.')
+        const concert = await this.concertService.findConcert(concertId, false)
+		const {capacity} = concert
+		if(seatNum>capacity) throw new BadRequestException('잘못된 좌석 번호입니다.')
+		const {user} = this.req
+		const existBooking = await this.bookingRepository.findOne({where:{userId:user.id,scheduleId:id}})
+		if(existBooking) throw new ConflictException('이미 예매하신 공연입니다.')
         const queryRunner = this.dataSource.createQueryRunner()
         await queryRunner.connect()
         await queryRunner.startTransaction()
         try {
-            const {user, schedule, concert} = this.req
             const spending = concert.price
             if (user.point < spending) throw new BadRequestException('포인트가 부족합니다.')
             user.point -= spending
             await queryRunner.manager.save(user)
             --schedule.vacancy
             await queryRunner.manager.save(schedule)
-            await queryRunner.manager.save(Booking, {userId: user.id, scheduleId: schedule.id, count: 1, spending})
+			const booking = {userId: user.id, scheduleId: id, count: 1, seatNum, spending}
+            await queryRunner.manager.save(Booking, booking)
             await queryRunner.commitTransaction()
+			return booking
         } catch (e) {
             await queryRunner.rollbackTransaction()
-            if (e instanceof QueryFailedError) throw new ConflictException('이미 예매하신 공연입니다.')
+            if (e instanceof QueryFailedError) throw new ConflictException('해당 좌석은 이미 예매되었습니다.')
             throw e
         } finally {
             await queryRunner.release()
@@ -71,7 +82,6 @@ export class BookingService {
             await queryRunner.commitTransaction()
         } catch (e) {
             await queryRunner.rollbackTransaction()
-            if (e instanceof QueryFailedError) throw new ConflictException('이미 예매하신 공연입니다.')
             throw e
         } finally {
             await queryRunner.release()

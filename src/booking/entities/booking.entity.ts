@@ -4,6 +4,7 @@ import {Schedule} from '../../concert/entities/schedule.entity'
 
 @Entity({name: 'bookings'})
 @Unique(['userId', 'scheduleId'])
+@Unique(['scheduleId', 'seatNum'])
 export class Booking {
     @PrimaryGeneratedColumn()
     id: number
@@ -21,6 +22,9 @@ export class Booking {
 
     @Column('int')
     scheduleId: number
+	
+	@Column('int')
+	seatNum: number
 
     @Column('int')
     count: number

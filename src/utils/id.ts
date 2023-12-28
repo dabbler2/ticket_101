@@ -1,4 +1,4 @@
-import {IsInt, Min} from 'class-validator'
+import {IsInt, Min, IsOptional} from 'class-validator'
 import {Type} from 'class-transformer'
 
 export class Id {
@@ -6,4 +6,10 @@ export class Id {
     @Type(() => Number)
     @Min(1)
     id: number
+	
+	@IsOptional()
+	@IsInt()
+    @Type(() => Number)
+    @Min(1)
+    seatNum: number
 }

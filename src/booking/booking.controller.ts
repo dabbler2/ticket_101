@@ -3,7 +3,6 @@ import {RolesGuard} from 'src/auth/roles.guard'
 import {Role} from 'src/user/types/userRole.type'
 import {Req, Param, Get, Post, Delete, UseGuards, Controller} from '@nestjs/common'
 import {BookingService} from './booking.service'
-import {BookingGuard} from './booking.guard'
 import {Id} from '../utils/id'
 
 @UseGuards(RolesGuard)
@@ -13,11 +12,10 @@ export class BookingController {
 
     // 공연 예매, 일단 1장씩만 가능
     @Roles(Role.User)
-    @UseGuards(BookingGuard)
-    @Post(':concertId/schedule/:scheduleId')
-    async book(@Req() req) {
-        const {price: spending} = req.concert
-        await this.bookingService.book()
+    @Post(':id/:seatNum')
+    async book(@Param() param: Id) {
+		const {id, seatNum} = param
+        const {spending} = await this.bookingService.book(id, seatNum)
         return {message: '예매가 완료되었습니다.', count: 1, spending}
     }
 
