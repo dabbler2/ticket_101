@@ -1,17 +1,16 @@
 import Joi from 'joi'
 import {SnakeNamingStrategy} from 'typeorm-naming-strategies'
-
 import {Module} from '@nestjs/common'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {TypeOrmModule, TypeOrmModuleOptions} from '@nestjs/typeorm'
-
+import { ServeStaticModule } from '@nestjs/serve-static'
 import {AppController} from './app.controller'
 import {AppService} from './app.service'
-
 import {UserModule} from './user/user.module'
 import {AuthModule} from './auth/auth.module'
 import {ConcertModule} from './concert/concert.module'
-import { BookingModule } from './booking/booking.module';
+import { BookingModule } from './booking/booking.module'
+import {join} from 'path'
 
 console.log(__dirname)
 const typeOrmModuleOptions = {
@@ -44,6 +43,9 @@ const typeOrmModuleOptions = {
             })
         }),
         TypeOrmModule.forRootAsync(typeOrmModuleOptions),
+		ServeStaticModule.forRoot({
+		  rootPath: join(__dirname, '../src/assets/html'),
+		}),
         UserModule,
         AuthModule,
         ConcertModule,
