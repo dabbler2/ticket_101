@@ -22,9 +22,9 @@ export class Booking {
 
     @Column('int')
     scheduleId: number
-	
-	@Column('int')
-	seatNum: number
+
+    @Column('int')
+    seatNum: number
 
     @Column('int')
     count: number

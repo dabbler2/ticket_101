@@ -1,9 +1,15 @@
-import {Scope, Inject, Injectable, BadRequestException, NotFoundException, ConflictException, ForbiddenException} from '@nestjs/common'
+import {
+    Scope,
+    Inject,
+    Injectable,
+    BadRequestException,
+    NotFoundException,
+    ConflictException,
+    ForbiddenException
+} from '@nestjs/common'
 import {Repository, QueryFailedError} from 'typeorm'
 import {InjectRepository} from '@nestjs/typeorm'
 import {Booking} from './entities/booking.entity'
-import {Schedule} from '../concert/entities/schedule.entity'
-import {User} from '../user/entities/user.entity'
 import {DataSource} from 'typeorm'
 import {REQUEST} from '@nestjs/core'
 import {RequestWithInfo} from '../utils/request-with-info'
@@ -14,10 +20,6 @@ export class BookingService {
     constructor(
         @InjectRepository(Booking)
         private readonly bookingRepository: Repository<Booking>,
-        @InjectRepository(Schedule)
-        private readonly scheduleRepository: Repository<Schedule>,
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
         private readonly dataSource: DataSource,
         @Inject(REQUEST) private req: RequestWithInfo,
         @Inject(ConcertService) private concertService: ConcertService
@@ -30,11 +32,11 @@ export class BookingService {
         const {concertId, vacancy} = schedule
         if (!vacancy) throw new BadRequestException('죄송합니다. 해당 일정은 매진입니다.')
         const concert = await this.concertService.findConcert(concertId, false)
-		const {capacity} = concert
-		if(seatNum>capacity) throw new BadRequestException('잘못된 좌석 번호입니다.')
-		const {user} = this.req
-		const existBooking = await this.bookingRepository.findOne({where:{userId:user.id,scheduleId:id}})
-		if(existBooking) throw new ConflictException('이미 예매하신 공연입니다.')
+        const {capacity} = concert
+        if (seatNum > capacity) throw new BadRequestException('잘못된 좌석 번호입니다.')
+        const {user} = this.req
+        const existBooking = await this.bookingRepository.findOne({where: {userId: user.id, scheduleId: id}})
+        if (existBooking) throw new ConflictException('이미 예매하신 공연입니다.')
         const queryRunner = this.dataSource.createQueryRunner()
         await queryRunner.connect()
         await queryRunner.startTransaction()
@@ -45,10 +47,10 @@ export class BookingService {
             await queryRunner.manager.save(user)
             --schedule.vacancy
             await queryRunner.manager.save(schedule)
-			const booking = {userId: user.id, scheduleId: id, count: 1, seatNum, spending}
+            const booking = {userId: user.id, scheduleId: id, count: 1, seatNum, spending}
             await queryRunner.manager.save(Booking, booking)
             await queryRunner.commitTransaction()
-			return booking
+            return booking
         } catch (e) {
             await queryRunner.rollbackTransaction()
             if (e instanceof QueryFailedError) throw new ConflictException('해당 좌석은 이미 예매되었습니다.')
@@ -70,7 +72,7 @@ export class BookingService {
         if (!booking || booking.userId !== user.id) throw new ForbiddenException('권한이 없습니다.')
         const queryRunner = this.dataSource.createQueryRunner()
         await queryRunner.connect()
-        await queryRunner.startTransaction()
+        await queryRunner.startTransaction('REPEATABLE READ')
         try {
             const {scheduleId, spending} = booking
             const schedule = await this.concertService.findSchedule(scheduleId)

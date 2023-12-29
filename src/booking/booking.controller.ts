@@ -14,9 +14,9 @@ export class BookingController {
     @Roles(Role.User)
     @Post(':id/:seatNum')
     async book(@Param() param: Id) {
-		const {id, seatNum} = param
-        const {spending} = await this.bookingService.book(id, seatNum)
-        return {message: '예매가 완료되었습니다.', count: 1, spending}
+        const {id, seatNum} = param
+        const booking = await this.bookingService.book(id, seatNum)
+        return {message: '예매가 완료되었습니다.', booking}
     }
 
     // 내 예매 목록 확인
