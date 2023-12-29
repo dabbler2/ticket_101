@@ -60,9 +60,14 @@ export class BookingService {
         }
     }
 
-    // 내 예매 목록 확인
+    // 사용자별 목록 확인
     async findByUser(userId: number) {
-        return await this.bookingRepository.find({where: {userId}})
+        return await this.bookingRepository.find({where: {userId}, order: {createdAt: 'DESC'}})
+    }
+
+    // 스케줄별 목록 확인
+    async findBySchedule(scheduleId: number) {
+        return await this.bookingRepository.find({where: {scheduleId}})
     }
 
     // 예매 취소

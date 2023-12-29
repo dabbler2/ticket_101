@@ -22,7 +22,7 @@ export class BookingController {
     // 내 예매 목록 확인
     @Roles(Role.User)
     @Get('myBooking')
-    async getMyBooking(@Req() req) {
+    async findMyBookings(@Req() req) {
         return await this.bookingService.findByUser(req.user.id)
     }
 
@@ -32,5 +32,21 @@ export class BookingController {
     async cancel(@Param() param: Id) {
         const {id} = param
         return await this.bookingService.cancel(id)
+    }
+
+    // 사용자별 예매 목록 확인
+    @Roles(Role.Admin)
+    @Get('user/:id')
+    async findBookingsOfUser(@Param() param: Id) {
+        const {id} = param
+        return await this.bookingService.findByUser(id)
+    }
+
+    // 스케줄별 예매 목록 확인
+    @Roles(Role.Admin)
+    @Get('schedule/:id')
+    async findBookingsOfSchedule(@Param() param: Id) {
+        const {id} = param
+        return await this.bookingService.findBySchedule(id)
     }
 }

@@ -31,4 +31,7 @@ export class Booking {
 
     @Column('int')
     spending: number
+	
+	@Column('datetime',{default:() => 'CURRENT_TIMESTAMP'})
+	createdAt: Date
 }
