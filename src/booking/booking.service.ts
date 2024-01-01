@@ -81,6 +81,8 @@ export class BookingService {
         try {
             const {scheduleId, spending} = booking
             const schedule = await this.concertService.findSchedule(scheduleId)
+			const startAt = new Date(schedule.startAt).getTime()
+			if(startAt-Date.now()<10800000) throw new BadRequestException('공연 시작 전 3시간 이내에는 예매 취소가 불가능합니다.')
             user.point += spending
             await queryRunner.manager.save(user)
             await queryRunner.manager.delete(Booking, booking)

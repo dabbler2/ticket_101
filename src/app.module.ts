@@ -43,9 +43,6 @@ const typeOrmModuleOptions = {
             })
         }),
         TypeOrmModule.forRootAsync(typeOrmModuleOptions),
-		ServeStaticModule.forRoot({
-		  rootPath: join(__dirname, '../src/assets/html'),
-		}),
         UserModule,
         AuthModule,
         ConcertModule,
